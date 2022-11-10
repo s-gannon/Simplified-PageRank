@@ -51,10 +51,10 @@ public:
 	}
 	void PageRank(int p){
 		vector<vector<double>> mtx = vector<vector<double>>(list.size());
-		for(size_t i = 0; i < list.size(); i++){
-			mtx[i] = vector<double>(list.size());
-			for(size_t j = 0; j < list.size(); j++){
-				mtx[i].assign(list.size(), 0);
+		for(size_t i = 0; i < num_pages; i++){
+			mtx[i] = vector<double>(num_pages);
+			for(size_t j = 0; j < num_pages; j++){
+				mtx[i].assign(num_pages, 0);
 			}
 			for(auto j : list[i]){
 				double dj = page_outdegree(j);
@@ -68,31 +68,31 @@ public:
 		}
 		//printing to check it
 		if(DEBUG_STATEMENTS){
-			for(size_t i = 0; i < list.size(); i++){
-				for(size_t j = 0; j < list.size(); j++){
+			for(size_t i = 0; i < num_pages; i++){
+				for(size_t j = 0; j < num_pages; j++){
 					cout << mtx[i][j] << " ";
 				}
 				cout << endl;
 			}
 		}
 
-		vector<double> r = vector<double>(list.size());
-		r.assign(list.size(), 1.0/((double)list.size()));
+		vector<double> r = vector<double>(num_pages);
+		r.assign(list.size(), 1.0/((double)num_pages));
 
 		for(auto el : page_tr){
 			cout << el.first << " " << r[el.second] << endl;
 		}
 
 		for(int k = 0; k < p; k++){
-			vector<double> rn = vector<double>(list.size());
-			for(size_t i = 0; i < list.size(); i++){
+			vector<double> rn = vector<double>(num_pages);
+			for(size_t i = 0; i < num_pages; i++){
 				double sum = 0;
-				for(size_t j = 0; j < list.size(); j++){
+				for(size_t j = 0; j < num_pages; j++){
 					sum += (mtx[i][j] * r[i]);
 				}
 				rn[i] = sum;
 			}
-			for(size_t i = 0; i < list.size(); i++){
+			for(size_t i = 0; i < num_pages; i++){
 				r[i] = rn[i];
 			}
 			if(DEBUG_STATEMENTS)
