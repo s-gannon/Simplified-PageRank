@@ -45,6 +45,8 @@ public:
 		return list[page_tr[page]].size();
 	}
 	double page_outdegree(int page){
+		if(DEBUG_STATEMENTS)
+			cout << "Number of elements in page #" << page << " is " <<  list[page].size() << endl;
 		return list[page].size();
 	}
 	void PageRank(int p){
@@ -55,12 +57,12 @@ public:
 				mtx[i].assign(list.size(), 0);
 			}
 			for(auto j : list[i]){
-				int dj = page_outdegree(j);
-				if(dj == 0){
+				double dj = page_outdegree(j);
+				if(dj < 1 ){
 					mtx[i][j] = 1;
 				}
 				else{
-					mtx[i][j] = 1.0/page_outdegree(dj);
+					mtx[i][j] = 1.0/dj;
 				}
 			}
 		}
@@ -76,6 +78,10 @@ public:
 
 		vector<double> r = vector<double>(list.size());
 		r.assign(list.size(), 1.0/((double)list.size()));
+
+		for(auto el : page_tr){
+			cout << el.first << " " << r[el.second] << endl;
+		}
 
 		for(int k = 0; k < p; k++){
 			vector<double> rn = vector<double>(list.size());
@@ -93,6 +99,11 @@ public:
 				cout << "Power iteration " << k + 1 << " complete!" << endl;
 		}
 		//final print with the site names in alph order
+		
+		for(auto el : page_tr){
+			cout << el.first << " " << r[el.second] << endl;
+		}
+
 	}
 };
 
