@@ -6,6 +6,7 @@
 #include <initializer_list>
 
 #define MAX 10000
+#define DEBUG_STATEMENTS 0
 
 using namespace std;
 
@@ -23,7 +24,8 @@ public:
 	}
 	~AdjacencyList(){}
 	void insert(string page, string link){
-		cout << "Link from " << page << " to " << link << endl;
+		if(DEBUG_STATEMENTS)
+			cout << "Link from " << page << " to " << link << endl;
 		if(page_tr.find(page) == page_tr.end())
 			page_tr[page] = num_pages++;
 		if(page_tr.find(link) == page_tr.end())
@@ -46,9 +48,9 @@ public:
 		return list[page].size();
 	}
 	void PageRank(int p){
-		vector<vector<double>> mtx;
+		vector<vector<double>> mtx = vector<vector<double>>(list.size());
 		for(size_t i = 0; i < list.size(); i++){
-			
+			mtx[i] = vector<double>(list.size());
 			for(size_t j = 0; j < list.size(); j++){
 				mtx[i].assign(list.size(), 0);
 			}
@@ -63,28 +65,32 @@ public:
 			}
 		}
 		//printing to check it
-		for(size_t i = 0; i < list.size(); i++){
-			for(size_t j = 0; j < list.size(); j++){
-				cout << mtx[i][j] << " ";
+		if(DEBUG_STATEMENTS){
+			for(size_t i = 0; i < list.size(); i++){
+				for(size_t j = 0; j < list.size(); j++){
+					cout << mtx[i][j] << " ";
+				}
+				cout << endl;
 			}
-			cout << endl;
 		}
 
-		vector<double> r;
+		vector<double> r = vector<double>(list.size());
 		r.assign(list.size(), 1.0/((double)list.size()));
 
-		for(int i = 0; i < p; p++){
-			vector<double> rn;
-			for(size_t i = 0; i < mtx.size(); i++){
+		for(int k = 0; k < p; k++){
+			vector<double> rn = vector<double>(list.size());
+			for(size_t i = 0; i < list.size(); i++){
 				double sum = 0;
-				for(size_t j = 0; j < mtx[i].size(); j++){
+				for(size_t j = 0; j < list.size(); j++){
 					sum += (mtx[i][j] * r[i]);
 				}
 				rn[i] = sum;
 			}
-			for(size_t i = 0; i < r.size(); i++){
+			for(size_t i = 0; i < list.size(); i++){
 				r[i] = rn[i];
 			}
+			if(DEBUG_STATEMENTS)
+				cout << "Power iteration " << k + 1 << " complete!" << endl;
 		}
 		//final print with the site names in alph order
 	}
@@ -99,13 +105,13 @@ int main(){
 	cin >> pow_iters;
 
 	for(int i = 0; i < num_lines; i++){
-		cout << i;
+		if(DEBUG_STATEMENTS)
+			cout << i << " ";
 		cin >> from;
 		cin >> to;
 		aj.insert(from, to);
 	}
 	// aj.print();
-	cout << "?";
 	
 	aj.PageRank(pow_iters);
 
