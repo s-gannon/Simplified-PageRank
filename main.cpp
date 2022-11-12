@@ -23,7 +23,6 @@ public:
 	AdjacencyList(){
 		num_pages = 0;
 	}
-	~AdjacencyList(){}
 	void insert(string page, string link){
 		if(DEBUG_STATEMENTS)
 			cout << "Link from " << page << " to " << link << endl;
@@ -56,7 +55,7 @@ public:
 		return list[page].size();
 	}
 	void PageRank(int p){
-		vector<vector<double>> mtx = vector<vector<double>>(list.size());
+		vector<vector<double>> mtx = vector<vector<double>>(num_pages);
 		for(int i = 0; i < num_pages; i++){
 			mtx[i] = vector<double>(num_pages);
 			for(int j = 0; j < num_pages; j++){
@@ -81,6 +80,7 @@ public:
 				}
 			}
 		}
+		cout << "?";
 		//printing to check it
 		if(DEBUG_STATEMENTS){
 			for(int i = 0; i < num_pages; i++){
@@ -92,7 +92,7 @@ public:
 		}
 
 		vector<double> r = vector<double>(num_pages);
-		r.assign(list.size(), 1.0/((double)num_pages));
+		r.assign(num_pages, 1.0/((double)num_pages));
 
 		if(DEBUG_STATEMENTS){
 			for(auto el : page_tr){
@@ -102,7 +102,7 @@ public:
 			
 		for(int k = 0; k < p - 1; k++){
 			vector<double> rn = vector<double>(num_pages);
-			rn.assign(0, num_pages);
+			rn.assign(num_pages, 0);
 			
 			for(int i = 0; i < num_pages; i++){
 				double sum = 0;
@@ -141,14 +141,14 @@ int main(){
 
 	cin >> num_lines;
 	cin >> pow_iters;
-
-	for(int i = 0; i < num_lines; i++){
+	for(int i = 0; i < num_lines; i++){		
 		if(DEBUG_STATEMENTS)
 			cout << i << " ";
 		cin >> from;
 		cin >> to;
 		aj.insert(from, to);
 	}
+
 	// aj.print();
 	
 	aj.PageRank(pow_iters);
