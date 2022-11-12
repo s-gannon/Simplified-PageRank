@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <initializer_list>
 
 #define MAX 10000
@@ -99,19 +100,20 @@ public:
 			}
 		}
 			
-		for(int k = 0; k < p; k++){
+		for(int k = 0; k < p - 1; k++){
 			vector<double> rn = vector<double>(num_pages);
+			rn.assign(0, num_pages);
 			
 			for(int i = 0; i < num_pages; i++){
 				double sum = 0;
 				for(int j = 0; j < num_pages; j++){
 					if(DEBUG_STATEMENTS){
-						cout << mtx[i][j] << " * " << r[j] << endl;
+						cout << mtx[i][j] << " * " << r[j] << " = " << (mtx[i][j] * r[j]) << endl;
 					}
-					sum += (mtx[i][j] * r[i]);
+					sum += (mtx[i][j] * r[j]);
 				}
 				if(DEBUG_STATEMENTS){
-					cout << endl;
+					cout << "Final sum: " << sum << endl;
 				}
 				rn[i] = sum;
 			}
@@ -124,6 +126,8 @@ public:
 		//final print with the site names in alph order
 		
 		for(auto el : page_tr){
+			cout << fixed << showpoint;
+			cout << setprecision(2);
 			cout << el.first << " " << r[el.second] << endl;
 		}
 
