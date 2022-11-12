@@ -6,7 +6,7 @@
 #include <initializer_list>
 
 #define MAX 10000
-#define DEBUG_STATEMENTS 0
+#define DEBUG_STATEMENTS 1
 
 using namespace std;
 
@@ -40,6 +40,11 @@ public:
 			}
 			cout << endl;
 		}
+		if(DEBUG_STATEMENTS){
+			for(auto el : page_tr){
+				cout << el.first << " " << el.second << endl;
+			}
+		}
 	}
 	double page_outdegree(string page){
 		return list[page_tr[page]].size();
@@ -51,26 +56,35 @@ public:
 	}
 	void PageRank(int p){
 		vector<vector<double>> mtx = vector<vector<double>>(list.size());
-		for(size_t i = 0; i < num_pages; i++){
+		for(int i = 0; i < num_pages; i++){
 			mtx[i] = vector<double>(num_pages);
-			for(size_t j = 0; j < num_pages; j++){
+			for(int j = 0; j < num_pages; j++){
 				mtx[i].assign(num_pages, 0);
 			}
-			for(auto j : list[i]){
-				double dj = page_outdegree(j);
-				if(dj < 1 ){
-					mtx[i][j] = 1;
-				}
-				else{
-					mtx[i][j] = 1.0/dj;
+			/*
+			0 => 1 2 
+			1 => 2 
+			2 => 3 
+			3 => 4 
+			4 => 0 1
+			*/
+			//created the empty matrix
+			for(const auto &el : list){	//for every el in the list
+				for(auto item : el.second){
+					if(DEBUG_STATEMENTS){
+						cout << item << " " << el.first << endl;
+					}
+					if(item == i){
+						mtx[i][el.first] = 1.0/page_outdegree(el.first);
+					}
 				}
 			}
 		}
 		//printing to check it
 		if(DEBUG_STATEMENTS){
-			for(size_t i = 0; i < num_pages; i++){
-				for(size_t j = 0; j < num_pages; j++){
-					cout << mtx[i][j] << " ";
+			for(int i = 0; i < num_pages; i++){
+				for(int j = 0; j < num_pages; j++){
+					printf("%5.2lf", mtx[i][j]);
 				}
 				cout << endl;
 			}
@@ -85,14 +99,21 @@ public:
 
 		for(int k = 0; k < p; k++){
 			vector<double> rn = vector<double>(num_pages);
-			for(size_t i = 0; i < num_pages; i++){
+			
+			for(int i = 0; i < num_pages; i++){
 				double sum = 0;
-				for(size_t j = 0; j < num_pages; j++){
+				for(int j = 0; j < num_pages; j++){
+					if(DEBUG_STATEMENTS){
+						cout << mtx[i][j] << " * " << r[j] << endl;
+					}
 					sum += (mtx[i][j] * r[i]);
+				}
+				if(DEBUG_STATEMENTS){
+					cout << endl;
 				}
 				rn[i] = sum;
 			}
-			for(size_t i = 0; i < num_pages; i++){
+			for(int i = 0; i < num_pages; i++){
 				r[i] = rn[i];
 			}
 			if(DEBUG_STATEMENTS)
@@ -122,7 +143,7 @@ int main(){
 		cin >> to;
 		aj.insert(from, to);
 	}
-	// aj.print();
+	aj.print();
 	
 	aj.PageRank(pow_iters);
 
