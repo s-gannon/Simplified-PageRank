@@ -80,7 +80,6 @@ public:
 				}
 			}
 		}
-		cout << "?";
 		//printing to check it
 		if(DEBUG_STATEMENTS){
 			for(int i = 0; i < num_pages; i++){
