@@ -6,7 +6,7 @@
 #include <initializer_list>
 
 #define MAX 10000
-#define DEBUG_STATEMENTS 1
+#define DEBUG_STATEMENTS 0
 
 using namespace std;
 
@@ -93,10 +93,12 @@ public:
 		vector<double> r = vector<double>(num_pages);
 		r.assign(list.size(), 1.0/((double)num_pages));
 
-		for(auto el : page_tr){
-			cout << el.first << " " << r[el.second] << endl;
+		if(DEBUG_STATEMENTS){
+			for(auto el : page_tr){
+				cout << el.first << " " << r[el.second] << endl;
+			}
 		}
-
+			
 		for(int k = 0; k < p; k++){
 			vector<double> rn = vector<double>(num_pages);
 			
@@ -143,7 +145,7 @@ int main(){
 		cin >> to;
 		aj.insert(from, to);
 	}
-	aj.print();
+	// aj.print();
 	
 	aj.PageRank(pow_iters);
 
